@@ -13,9 +13,9 @@ state = {
   query: null,
   albums: [],
   showLoading: false,
-  showGallery: false
-  showNsfw: false;
-  minViews: 0;
+  showGallery: false,
+  showNsfw: false,
+  minViews: 0
 
 };
 
