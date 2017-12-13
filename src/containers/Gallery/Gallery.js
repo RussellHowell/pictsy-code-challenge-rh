@@ -1,29 +1,33 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import SearchBar from 'material-ui-search-bar';
 
 import keys from '../../keys/keys';
 
 import ImageCard from '../../components/ImageCard/ImageCard';
-import SearchBar from 'material-ui-search-bar';
 
 
 class Gallery extends Component{
 
 state = {
+  query: null,
   albums: [],
   showLoading: false,
   showGallery: false
+  showNsfw: false;
+  minViews: 0;
+
 };
 
 
 //API HANDLER
-apiCallHandler = (query) => {
+apiCallHandler = () => {
   //Clear album list
   this.setState({albums: []});
   //Display Loading Here
   axios({
     method: 'get',
-    url: 'https://api.imgur.com/3/gallery/search/?q=' + query, //TODO - GENERALIZE
+    url: 'https://api.imgur.com/3/gallery/search/?q=' + this.state.query,
     headers: {'Authorization': keys.imgur_clientId}
   }).then((res) => {
       //TODO - Handle Request Error
@@ -41,7 +45,6 @@ apiCallHandler = (query) => {
         showLoading: false,
         showGallery: true
       });
-      console.log(this.state); //TODO - remove log
   });
 }
 
@@ -52,20 +55,18 @@ apiCallHandler = (query) => {
         return <ImageCard link={album.cover_img_uri} key={album.id}/>
       }));
 
-      console.log(galleryList);
-
     return(
       <div>
         <h2>Gallery</h2>
-        <SearchBar id="search-bar"
-        onChange={() => console.log('onChange')}
-        //TODO - Find a better way to retrieve value from input
-        onRequestSearch={() => this.apiCallHandler(document.getElementById('search-bar').value)}
+        <SearchBar
+        onChange={(event) => this.setState({query: event})}
+        onRequestSearch= {() => this.apiCallHandler()}
         style={{
         margin: '0 auto',
         maxWidth: 800}}/>
 
         {galleryList}
+
       </div>
     );
   }
