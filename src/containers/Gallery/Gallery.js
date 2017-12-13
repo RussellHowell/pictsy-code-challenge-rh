@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+
 import keys from '../../keys/keys';
 
 import ImageCard from '../../components/ImageCard/ImageCard';
+import SearchBar from 'material-ui-search-bar';
+
 
 class Gallery extends Component{
 
@@ -14,12 +17,14 @@ state = {
 
 
 //API HANDLER
-apiCallHandler = () => {
+apiCallHandler = (query) => {
+  //Clear album list
+  this.setState({albums: []});
   //Display Loading Here
   axios({
     method: 'get',
-    url: 'https://api.imgur.com/3/gallery/search/?q=cars', //TODO - GENERALIZE
-    headers: {'Authorization': keys.imgur_clientId} 
+    url: 'https://api.imgur.com/3/gallery/search/?q=' + query, //TODO - GENERALIZE
+    headers: {'Authorization': keys.imgur_clientId}
   }).then((res) => {
       //TODO - Handle Request Error
 
@@ -52,8 +57,14 @@ apiCallHandler = () => {
     return(
       <div>
         <h2>Gallery</h2>
-        <button onClick={this.apiCallHandler}>Make Api Call</button>
-        <hr/>
+        <SearchBar id="search-bar"
+        onChange={() => console.log('onChange')}
+        //TODO - Find a better way to retrieve value from input
+        onRequestSearch={() => this.apiCallHandler(document.getElementById('search-bar').value)}
+        style={{
+        margin: '0 auto',
+        maxWidth: 800}}/>
+
         {galleryList}
       </div>
     );

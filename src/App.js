@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+
 import Layout from './components/Layout/Layout';
 import Gallery from './containers/Gallery/Gallery';
 import './App.css';
