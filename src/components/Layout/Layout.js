@@ -1,11 +1,9 @@
 import React from 'react';
 
 import Auxillary from '../../hoc/Auxillary';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 const layout = (props) => (
 
-    <MuiThemeProvider>
     <Auxillary>
       <div>
         App Bar
@@ -14,7 +12,6 @@ const layout = (props) => (
         {props.children}
       </main>
     </Auxillary>
-    </MuiThemeProvider>
 
   );
 

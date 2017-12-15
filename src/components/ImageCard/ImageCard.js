@@ -1,11 +1,15 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const imageCard = (props) => (
 
   <div onClick={props.onClick.bind(null, props.albumId)}>
-    <img src={props.link}/>
+    <img src={props.src}/>
   </div>
   );
+
+  imageCard.propTypes = {
+    src: PropTypes.string.isRequired
+  };
 
 export default imageCard;
