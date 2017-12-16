@@ -8,10 +8,15 @@ import ImageCard from '../../components/ImageCard/ImageCard';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import AlbumGallery from 'react-photo-gallery';
 import Album from './Album/Album';
+import Measure from 'react-measure';
 import Auxillary from '../../hoc/Auxillary';
 
-class Gallery extends Component{
 
+class Gallery extends Component{
+constructor(){
+  super();
+  this.state = { width: -1 };
+}
 //default state
 state = {
   query: null,
@@ -31,6 +36,10 @@ componentDidMount(){
 
 getAlbum(albumId){
   return this.state.albums[albumId];
+}
+
+getComments(albumId){
+  return this.state.albums[albumId].comments;
 }
 
 //API HANDLER
@@ -83,8 +92,10 @@ apiCallHandler = () => {
         albums: albums,
         showLoading: false,
         showGallery: true
-      });
+      }, () => console.log(this.state));
+
   });
+
 }
 
 updateFilterHandler = (newFilter) => {
@@ -123,12 +134,12 @@ albumClickedHandler = (albumId) => {
     });
   });
 }
-
   render( ) {
+    const width = this.state.width;
 
-    let galleryList =  (Object.keys(this.state.albums).map((albumId) => {
-        return <ImageCard onClick={this.albumClickedHandler} src={this.getAlbum(albumId).cover_img_src} albumId={albumId} key={albumId}/>
-      }));
+    // let galleryList =  (Object.keys(this.state.albums).map((albumId) => {
+    //     return <ImageCard onClick={this.albumClickedHandler} photo={this.getAlbum(albumId).images[0]} albumId={albumId} key={albumId}/>
+    //   }));
 
     //TODO - prevents applicaiton form loading "/album" route with no albums availiable - (make this cleaner)
     let redirect = null;
@@ -147,12 +158,41 @@ albumClickedHandler = (albumId) => {
     return(
       <div>
         <h2>Gallery</h2>
-        <Route exact path="/"  render= {() => galleryList }/>
+
+        <Measure bounds onResize={(contentRect) => this.setState({ width: contentRect.bounds.width })}>
+        {
+        ({measureRef}) => {
+          if (width < 1 ){
+            return <div ref={measureRef}></div>;
+          }
+          let columns = 1;
+          if (width >= 600){
+            columns = 2;
+          }
+          if (width >= 1024){
+            columns = 3;
+          }
+          if (width >= 1824){
+            columns = 4;
+          }
+          return <Route exact path="/"  render= {() => { return <div ref={measureRef}><AlbumGallery
+            ImageComponent={ImageCard}
+
+            photos={Object.keys(this.state.albums).map((key) => this.state.albums[key].images[0])}
+            columns={columns}
+            margin={5}
+            />
+            </div>
+          }}/>
+        }
+        }
+        </Measure>
         {redirect}
       </div>
     );
   }
 }
+
 
 
 export default withRouter(Gallery);

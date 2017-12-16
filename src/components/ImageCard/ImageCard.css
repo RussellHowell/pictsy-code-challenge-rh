@@ -1,0 +1,45 @@
+.container{
+  background-color: #eee;
+  overflow: hidden;
+  float: left;
+  position: relative;
+  display: inline-block;
+
+}
+
+.albumInfo{
+  position:relative;
+  display:block;
+  height: 20px;
+  margin: 5px;
+}
+
+.albumTitle{
+  position: absolute;
+  left: 0px;
+}
+
+.commentInfo{
+  position: absolute;
+  right: 0px;
+}
+
+@media only screen and (max-width: 900px) {
+.container{
+    width: 100%;
+  }
+
+  .image{
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media only screen and (min-width: 901px) {
+  .image{
+    max-width: 100%;
+    width: auto;
+    height: 400px;
+    max-height: 400px;
+  }
+}
