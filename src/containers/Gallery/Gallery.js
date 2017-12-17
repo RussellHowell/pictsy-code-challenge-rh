@@ -11,16 +11,13 @@ import StackGrid, { transitions } from "react-stack-grid";
 import Album from './Album/Album';
 import Measure from 'react-measure';
 import Auxillary from '../../hoc/Auxillary';
+import BottomScrollListener from 'react-bottom-scroll-listener';
 
 
 class Gallery extends Component{
-constructor(){
-  super();
-  this.state = { width: -1 };
-}
+
 //default state
 state = {
-  query: null,
   clickedAlbum: "",
   albums: {},
   filter: {
@@ -29,7 +26,14 @@ state = {
   },
   showLoading: false,
   showGallery: false,
+  albumsRendered: 10
 };
+
+//constants
+RENDER_STEP_SIZE = 10; //how many album ImageCards to request at a time
+GRID_COL_WIDTH = 300; //Size of grid columns
+
+
 
 componentDidMount(){
   this.apiCallHandler();
@@ -46,7 +50,7 @@ getComments(albumId){
 //API HANDLER
 apiCallHandler = () => {
   //Clear album list
-  this.setState({albums: []});
+  // this.setState({albums: []});
   //Display Loading Here
   axios({
     method: 'get',
@@ -60,6 +64,10 @@ apiCallHandler = () => {
       // console.log(resAlbums[0].images);
       let albums = {}
       resAlbums.forEach((album) => {
+
+        //prevent videos from being loaded - maybe support later
+        if(album.type !== 'video/mp4')
+        {
           //extract multiple images from albums
           let albumImages = [];
           if(album.is_album){
@@ -87,6 +95,7 @@ apiCallHandler = () => {
             images_count: album.images_count,
             images: albumImages,
             comments:[]};
+          }
       });
 
       this.setState({
@@ -142,16 +151,18 @@ albumClickedHandler = (albumId) => {
   }
 
 
-  render( ) {
+galleryBottomReachedHandler(){
+  //retrieve more albums
+  let renderCount = this.state.albumsRendered;
+  let albumCount = Object.keys(this.state.albums).length;
+  //update render count - prevent array out-of-bounds execption
+  renderCount = (renderCount + this.RENDER_STEP_SIZE > albumCount) ? albumCount : renderCount+this.RENDER_STEP_SIZE;
+  this.setState({albumsRendered: renderCount});
+}
 
-    let galleryList = <div></div>
-    if(this.state.albums !== undefined){
-    galleryList =  (Object.keys(this.state.albums).map((albumId) => {
-        return <ImageCard onClick={this.albumClickedHandler} album={this.getAlbum(albumId)} albumId={albumId} key={albumId}/>
-      }));
-    }else{
-      galleryList = <div></div>
-    }
+
+
+  render( ) {
 
     //TODO - prevents applicaiton form loading "/album" route with no albums availiable - (make this cleaner)
     let redirect = null;
@@ -167,21 +178,32 @@ albumClickedHandler = (albumId) => {
       )
     }
 
+
+        let galleryList = [<div></div>];
+        if(this.state.albums !== undefined){
+          galleryList =  (Object.keys(this.state.albums).map((albumId) => {
+            return <ImageCard onClick={this.albumClickedHandler} album={this.getAlbum(albumId)} albumId={albumId} key={albumId}/>
+          }));
+        }
+
     return(
       <div>
         <h2>Gallery</h2>
         <Route exact path="/" render={() =>
-          <StackGrid
-           columnWidth={500}
-           gutterWidth={10}
-           gutterWidth={10}
-           appear={transitions.appear}
-           appeared={transitions.appeared}
-           leaved={transitions.leaved}
-           >
-            {galleryList}
-        </StackGrid>
-      }/>
+
+          <BottomScrollListener offset={200} onBottom={this.galleryBottomReachedHandler.bind(this)}>
+            <StackGrid
+             columnWidth={500}
+             gutterWidth={10}
+             gutterWidth={10}
+             appear={transitions.appear}
+             appeared={transitions.appeared}
+             leaved={transitions.leaved}
+             >
+              {galleryList.slice(0, this.state.albumsRendered)}
+          </StackGrid>
+        </BottomScrollListener>
+        }/>
         {redirect}
       </div>
     );

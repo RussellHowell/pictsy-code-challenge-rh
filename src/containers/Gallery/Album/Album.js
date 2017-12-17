@@ -90,7 +90,7 @@ updateComment = (event) => this.setState({newCommentText: event.target.value});
            </Drawer>
         </Paper>
         <Button fab onClick={this.toggleDrawer(true)} className={styleClasses.fab} color="primary" aria-label="comments">
-       <Comment />
+          <Comment />
        </Button>
       </div>
     );
