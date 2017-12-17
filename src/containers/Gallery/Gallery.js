@@ -7,6 +7,7 @@ import keys from '../../keys/keys';
 import ImageCard from '../../components/ImageCard/ImageCard';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import AlbumGallery from 'react-photo-gallery';
+import StackGrid from "react-stack-grid";
 import Album from './Album/Album';
 import Measure from 'react-measure';
 import Auxillary from '../../hoc/Auxillary';
@@ -137,9 +138,15 @@ albumClickedHandler = (albumId) => {
   render( ) {
     const width = this.state.width;
 
-    // let galleryList =  (Object.keys(this.state.albums).map((albumId) => {
-    //     return <ImageCard onClick={this.albumClickedHandler} photo={this.getAlbum(albumId).images[0]} albumId={albumId} key={albumId}/>
-    //   }));
+    let galleryList = <div></div>
+    if(this.state.albums !== undefined){
+    galleryList =  (Object.keys(this.state.albums).map((albumId) => {
+        return <ImageCard onClick={this.albumClickedHandler} album={this.getAlbum(albumId)} albumId={albumId} key={albumId}/>
+      }));
+    }else{
+      galleryList = <div></div>
+    }
+
 
     //TODO - prevents applicaiton form loading "/album" route with no albums availiable - (make this cleaner)
     let redirect = null;
@@ -158,35 +165,13 @@ albumClickedHandler = (albumId) => {
     return(
       <div>
         <h2>Gallery</h2>
-
-        <Measure bounds onResize={(contentRect) => this.setState({ width: contentRect.bounds.width })}>
-        {
-        ({measureRef}) => {
-          if (width < 1 ){
-            return <div ref={measureRef}></div>;
-          }
-          let columns = 1;
-          if (width >= 600){
-            columns = 2;
-          }
-          if (width >= 1024){
-            columns = 3;
-          }
-          if (width >= 1824){
-            columns = 4;
-          }
-          return <Route exact path="/"  render= {() => { return <div ref={measureRef}><AlbumGallery
-            ImageComponent={ImageCard}
-
-            photos={Object.keys(this.state.albums).map((key) => this.state.albums[key].images[0])}
-            columns={columns}
-            margin={5}
-            />
-            </div>
-          }}/>
-        }
-        }
-        </Measure>
+        <StackGrid
+         columnWidth={500}
+         gutterWidth={10}
+         gutterWidth={10}
+         onLayout={()=>console.log("Layout!")}>
+          {galleryList}
+        </StackGrid>
         {redirect}
       </div>
     );

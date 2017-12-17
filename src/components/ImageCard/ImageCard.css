@@ -4,24 +4,32 @@
   float: left;
   position: relative;
   display: inline-block;
+  margin: 10px;
+}
 
+
+.image{
+  margin: 3px;
 }
 
 .albumInfo{
   position:relative;
   display:block;
-  height: 20px;
+  height: 30px;
   margin: 5px;
 }
 
 .albumTitle{
   position: absolute;
   left: 0px;
+  bottom: 2px;
+  width: 80%;
 }
 
 .commentInfo{
   position: absolute;
-  right: 0px;
+  right: 10px;
+  bottom: 0px;
 }
 
 @media only screen and (max-width: 900px) {
@@ -30,8 +38,8 @@
   }
 
   .image{
-    width: 100%;
-    height: auto;
+    /* width: 100%;
+    height: auto; */
   }
 }
 
@@ -39,7 +47,7 @@
   .image{
     max-width: 100%;
     width: auto;
-    height: 400px;
-    max-height: 400px;
+    /* height: 400px;
+    max-height: 400px; */
   }
 }
