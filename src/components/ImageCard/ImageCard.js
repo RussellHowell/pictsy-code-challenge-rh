@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
-import styleClasses from './ImageCard.css';
-import { withStyles } from 'material-ui/styles';
-import { Comment } from 'material-ui-icons';
-import Badge from 'material-ui/Badge';
 
+import styleClasses from './ImageCard.css';
+
+import { Paper, Badge, withStyles } from 'material-ui';
+import { Comment } from 'material-ui-icons';
+import Img from 'react-image';
+import VisibilitySensor from 'react-visibility-sensor';
 
 const styles = theme => ({
   badge: {
@@ -21,10 +22,16 @@ const {src, height, width}  = album.images[0]
 //calculate new image height based off of column width;
 let resHeight = (height*500)/width;
 
+const handleClick = () => {
+    onClick(album.id);
+}
 
+// style={{height: resHeight}}
 return (
-    <Paper className={styleClasses.container}  elevation={4}>
+    <Paper onClick={handleClick} className={styleClasses.container}  elevation={4}>
+    <VisibilitySensor >
       <img className={styleClasses.image} style={{height: resHeight}} src={src}/>
+    </VisibilitySensor>
       <div className={styleClasses.albumInfo}>
         <span className={styleClasses.albumTitle}>{album.title}</span>
         <span className={styleClasses.commentInfo}>

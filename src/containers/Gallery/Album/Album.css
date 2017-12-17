@@ -1,0 +1,38 @@
+.fab {
+  bottom: 0;
+  position: fixed !important;
+  margin: 1em;
+  right: 0px;
+}
+
+.commentsHeader{
+  height: 10vh;
+  background-color: rgba(17, 144, 215, 0.8);
+}
+
+.commentsListContainer{
+  height: 65vh;
+  overflow-y: scroll;
+}
+
+.commentsInputContainer{
+  position: relative;
+  height: 25vh;
+  width: 100%;
+}
+
+.commentForm{
+  height: 100%;
+}
+
+.commentInput{
+  display: block;
+  width: 90%;
+  margin: 0.75rem;
+}
+
+.commentButton{
+  width: 90%;
+  margin: 0.75rem;
+  display:block;
+}

@@ -7,7 +7,7 @@ import keys from '../../keys/keys';
 import ImageCard from '../../components/ImageCard/ImageCard';
 import FilterPanel from '../../components/FilterPanel/FilterPanel';
 import AlbumGallery from 'react-photo-gallery';
-import StackGrid from "react-stack-grid";
+import StackGrid, { transitions } from "react-stack-grid";
 import Album from './Album/Album';
 import Measure from 'react-measure';
 import Auxillary from '../../hoc/Auxillary';
@@ -104,39 +104,45 @@ updateFilterHandler = (newFilter) => {
 }
 
 albumClickedHandler = (albumId) => {
-
-
-  //imgur api responds with first 3 images of an album only
-  //retrieve remaining album images and navigate to album page
-  if(this.getAlbum(albumId).images_count > 3){
-    axios({
-      method: 'get',
-      url: 'https://api.imgur.com/3/album/' + albumId + '/images',
-      headers: {'Authorization': keys.imgur_clientId}
-    }).then((res) => {
-      //TODO - find a better way of updating specific album in state
-      let tmpState = this.state;
-      tmpState.albums[albumId].images = res.data.data.map((image) =>
-        ({
-            id: image.id,
-            src: image.link,
-            height: image.height,
-            width: image.width
-          }));
-      this.setState(tmpState);
-      console.log(this.getAlbum(albumId));
-    });
+    let tmpState = this.state;
+    tmpState.clickedAlbum = albumId;
+    //imgur api responds with first 3 images of an album only
+    //retrieve remaining album images and navigate to album page
+    if(this.getAlbum(albumId).images_count > 3){
+      axios({
+        method: 'get',
+        url: 'https://api.imgur.com/3/album/' + albumId + '/images',
+        headers: {'Authorization': keys.imgur_clientId}
+      }).then((res) => {
+        //TODO - find a better way of updating specific album in state
+        let tmpState = this.state;
+        tmpState.albums[albumId].images = res.data.data.map((image) =>
+          ({
+              id: image.id,
+              src: image.link,
+              height: image.height,
+              width: image.width
+            }));
+            this.setState(tmpState, () => {
+              this.props.history.push({
+                pathname: '/album',
+                hash: albumId
+              });
+            });
+        console.log(this.getAlbum(albumId));
+      });
+    }else{
+      this.setState(tmpState, () => {
+        this.props.history.push({
+          pathname: '/album',
+          hash: albumId
+        });
+      });
+    }
   }
 
-  this.setState({clickedAlbum: albumId}, () => {
-    this.props.history.push({
-      pathname: '/album',
-      hash: albumId
-    });
-  });
-}
+
   render( ) {
-    const width = this.state.width;
 
     let galleryList = <div></div>
     if(this.state.albums !== undefined){
@@ -146,7 +152,6 @@ albumClickedHandler = (albumId) => {
     }else{
       galleryList = <div></div>
     }
-
 
     //TODO - prevents applicaiton form loading "/album" route with no albums availiable - (make this cleaner)
     let redirect = null;
@@ -165,19 +170,22 @@ albumClickedHandler = (albumId) => {
     return(
       <div>
         <h2>Gallery</h2>
-        <StackGrid
-         columnWidth={500}
-         gutterWidth={10}
-         gutterWidth={10}
-         onLayout={()=>console.log("Layout!")}>
-          {galleryList}
+        <Route exact path="/" render={() =>
+          <StackGrid
+           columnWidth={500}
+           gutterWidth={10}
+           gutterWidth={10}
+           appear={transitions.appear}
+           appeared={transitions.appeared}
+           leaved={transitions.leaved}
+           >
+            {galleryList}
         </StackGrid>
+      }/>
         {redirect}
       </div>
     );
   }
 }
-
-
 
 export default withRouter(Gallery);
