@@ -3,4 +3,11 @@
   position: fixed !important;
   margin: 1em;
   right: 0px;
+  z-index: 1000;
+}
+
+.image{
+    display: block;
+    margin: auto;
+    max-width: 80%;
 }

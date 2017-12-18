@@ -17,6 +17,7 @@ import { Button } from 'material-ui';
 import styleClasses from './Gallery.css';
 
 
+
 class Gallery extends Component{
 
 //default state
@@ -158,7 +159,6 @@ albumClickedHandler = (albumId) => {
     }
   }
 
-
 galleryBottomReachedHandler(){
   //retrieve more albums
   let renderCount = this.state.albumsRendered;
@@ -208,10 +208,8 @@ submitCommentHandler = (albumId, comment) => {
     }else {
       redirect = (
         //TODO - Change this so that the "/album" route is simply passed the entire album
-        <Auxillary>
           <Route path="/album" render= {() => <Album album={this.state.albums[this.state.clickedAlbum]} onCommentSubmit={this.submitCommentHandler}/>}/>
-          <Route path="/album" render= {() => <AlbumGallery photos={this.getAlbum(this.state.clickedAlbum).images }/>}/>
-        </Auxillary>
+
       )
     }
 
@@ -225,7 +223,6 @@ submitCommentHandler = (albumId, comment) => {
 
     return(
       <div>
-        <h2>Gallery</h2>
         <Route exact path="/" render={() =>
           <BottomScrollListener offset={200} onBottom={this.galleryBottomReachedHandler.bind(this)}>
           <Auxillary>
@@ -251,5 +248,7 @@ submitCommentHandler = (albumId, comment) => {
     );
   }
 }
+
+
 
 export default withRouter(Gallery);
