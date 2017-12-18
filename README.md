@@ -1,9 +1,8 @@
 
 
 **Getting Started**
-
-clone repository
 ```
+  clone repository
   cd pictsy-code-challenge
   npm install
   npm start
