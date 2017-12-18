@@ -6,7 +6,7 @@ import { Typography, TextField, Button, Drawer, Paper, List, ListItem, ListItemT
 
 
 
-const commentsDrawer = ({drawerToggle, show, comments, onCommentSubmit, stagedCommentChanged}) => {
+const commentsDrawer = ({drawerToggle, show, comments, onCommentSubmit, stagedCommentChanged, stagedComment}) => {
 
   //TODO - quick fix for list key error, fix later
   let commentKey=0;
@@ -37,6 +37,7 @@ const commentsDrawer = ({drawerToggle, show, comments, onCommentSubmit, stagedCo
          <TextField className={styleClasses.commentInput}
                 label="Username"
                 name="username"
+                value={stagedComment.username}
                 onChange={stagedCommentChanged}
               />
           <TextField className={styleClasses.commentInput}
@@ -44,6 +45,7 @@ const commentsDrawer = ({drawerToggle, show, comments, onCommentSubmit, stagedCo
                  name="text"
                  multiline={true}
                  rows={3}
+                 value={stagedComment.text}
                  onChange={stagedCommentChanged}
                />
                <Button className={styleClasses.commentButton} raised={true} type="submit">Comment</Button>

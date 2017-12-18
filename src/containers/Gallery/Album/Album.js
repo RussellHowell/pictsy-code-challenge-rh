@@ -9,7 +9,7 @@ import { Comment } from 'material-ui-icons';
 class Album extends Component{
 
 state = {
-  comments: this.props.comments,
+  comments: this.props.album.comments,
   stagedComment: {
    username: '',
    text: ''
@@ -25,11 +25,13 @@ toggleDrawer = (open) => () => {
 
 commentSubmittedHandler = (event, comment) => {
   event.preventDefault();
-  console.log(this.state.stagedComment);
-    //TODO - ADD VALIDATION
+  console.log(this.props.album);
+  this.props.onCommentSubmit(this.props.album.id, this.state.stagedComment);
+
+  //TODO - ADD VALIDATION
   this.setState({
     comments: [...this.state.comments, this.state.stagedComment],
-    stagedComment: {username: '', text: ''}
+    stagedComment: { ...this.state.stagedComment, text: ''}
   });
 }
 
@@ -43,14 +45,13 @@ stagedCommentChangedHandler = (event) => {
 }
 
   render( ){
-
     return(
       <div>
         <Paper  elevation={4}>
           <Typography type="headline" component="h3">
 
           </Typography>
-          <CommentsDrawer drawerToggle={this.toggleDrawer} show={this.state.showCommentsDrawer} comments={this.state.comments} onCommentSubmit={this.commentSubmittedHandler} stagedCommentChanged={this.stagedCommentChangedHandler}/>
+          <CommentsDrawer drawerToggle={this.toggleDrawer} show={this.state.showCommentsDrawer} comments={this.state.comments} onCommentSubmit={this.commentSubmittedHandler} stagedCommentChanged={this.stagedCommentChangedHandler} stagedComment={this.state.stagedComment}/>
         </Paper>
         <Button fab onClick={this.toggleDrawer(true)} className={styleClasses.fab} color="primary" aria-label="comments">
           <Comment />
@@ -61,7 +62,7 @@ stagedCommentChangedHandler = (event) => {
 }
 
 Album.propTypes = {
-  comments: PropTypes.array.isRequired
+  album: PropTypes.object.isRequired
 };
 
 export default (Album);

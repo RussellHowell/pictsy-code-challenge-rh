@@ -186,6 +186,18 @@ filterRequestHandler = () => {
   this.apiCallHandler();
 }
 
+submitCommentHandler = (albumId, comment) => {
+  this.setState({
+      albums: {
+        ...this.state.albums,
+        [albumId]: {
+          ...this.state.albums[albumId],
+          comments: [...this.state.albums[albumId].comments, comment]
+        }
+      }
+  });
+
+}
 
   render( ) {
 
@@ -197,8 +209,8 @@ filterRequestHandler = () => {
       redirect = (
         //TODO - Change this so that the "/album" route is simply passed the entire album
         <Auxillary>
-          <Route path="/album" render= {() => <Album comments={this.state.albums[this.state.clickedAlbum].comments}/>}/>
-          <Route path="/album" render= {() => <AlbumGallery photos={this.getAlbum(this.state.clickedAlbum).images}/>}/>
+          <Route path="/album" render= {() => <Album album={this.state.albums[this.state.clickedAlbum]} onCommentSubmit={this.submitCommentHandler}/>}/>
+          <Route path="/album" render= {() => <AlbumGallery photos={this.getAlbum(this.state.clickedAlbum).images }/>}/>
         </Auxillary>
       )
     }
