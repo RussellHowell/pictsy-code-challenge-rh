@@ -67,7 +67,7 @@ apiCallHandler = () => {
       resAlbums.forEach((album) => {
 
         //prevent videos from being loaded - maybe support later
-        if((album.type !== undefined && album.type) !== 'video/mp4' || album.is_album === true)
+        if(album.type !== undefined && album.type !== 'video/mp4')
         {
           //extract multiple images from albums
           let albumImages = [];
