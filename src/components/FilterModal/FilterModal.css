@@ -1,0 +1,7 @@
+.modal{
+  position: fixed;
+  bottom: 50vh;
+  right: 50%;
+  width: 30rem;
+  transform: translate(50%, 50%);
+}

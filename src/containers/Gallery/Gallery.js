@@ -5,13 +5,16 @@ import { Route, withRouter, Redirect } from 'react-router-dom';
 import keys from '../../keys/keys';
 
 import ImageCard from '../../components/ImageCard/ImageCard';
-import FilterPanel from '../../components/FilterPanel/FilterPanel';
+import FilterModal from '../../components/FilterModal/FilterModal';
 import AlbumGallery from 'react-photo-gallery';
 import StackGrid, { transitions } from "react-stack-grid";
 import Album from './Album/Album';
 import Measure from 'react-measure';
 import Auxillary from '../../hoc/Auxillary';
 import BottomScrollListener from 'react-bottom-scroll-listener';
+import { Sort }from 'material-ui-icons';
+import { Button } from 'material-ui';
+import styleClasses from './Gallery.css';
 
 
 class Gallery extends Component{
@@ -21,10 +24,14 @@ state = {
   clickedAlbum: "",
   albums: {},
   filter: {
-    showNsfw: false,
-    minViews: 0
+    section: 'hot',
+    sort: 'viral',
+    window: 'day',
+    viral:'true',
+    mature:'false'
   },
   showLoading: false,
+  showFilterModal: false,
   showGallery: false,
   albumsRendered: 10
 };
@@ -32,8 +39,6 @@ state = {
 //constants
 RENDER_STEP_SIZE = 10; //how many album ImageCards to request at a time
 GRID_COL_WIDTH = 300; //Size of grid columns
-
-
 
 componentDidMount(){
   this.apiCallHandler();
@@ -54,7 +59,7 @@ apiCallHandler = () => {
   //Display Loading Here
   axios({
     method: 'get',
-    url: 'https://api.imgur.com/3/gallery/hot/viral/year/1?&showViral=true&mature=true&album_previews=true',
+    url: 'https://api.imgur.com/3/gallery/user/rising/year/1?&showViral=true&mature=true&album_previews=false',
     headers: {'Authorization': keys.imgur_clientId}
   }).then((res) => {
       //TODO - Handle Request Error
@@ -160,6 +165,17 @@ galleryBottomReachedHandler(){
   this.setState({albumsRendered: renderCount});
 }
 
+toggleFilterHandler = (open) => () => {
+  this.setState({
+    showFilterModal: open
+  });
+}
+
+filterChangeHandler = (field, value) => {
+    this.setState({
+      filter: {...this.state.filter, [field]: value}
+    });
+}
 
 
   render( ) {
@@ -190,8 +206,8 @@ galleryBottomReachedHandler(){
       <div>
         <h2>Gallery</h2>
         <Route exact path="/" render={() =>
-
           <BottomScrollListener offset={200} onBottom={this.galleryBottomReachedHandler.bind(this)}>
+          <Auxillary>
             <StackGrid
              columnWidth={500}
              gutterWidth={10}
@@ -202,6 +218,11 @@ galleryBottomReachedHandler(){
              >
               {galleryList.slice(0, this.state.albumsRendered)}
           </StackGrid>
+          <Button fab onClick={this.toggleFilterHandler(true)} className={styleClasses.fab} color="primary" aria-label="filter">
+            <Sort />
+          </Button>
+          <FilterModal show={this.state.showFilterModal} modalToggle={this.toggleFilterHandler} filterState={this.state.filter} filterChanged={this.filterChangeHandler}/>
+          </Auxillary>
         </BottomScrollListener>
         }/>
         {redirect}

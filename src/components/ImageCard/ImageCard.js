@@ -29,9 +29,7 @@ const handleClick = () => {
 // style={{height: resHeight}}
 return (
     <Paper onClick={handleClick} className={styleClasses.container}  elevation={4}>
-    <VisibilitySensor >
       <img className={styleClasses.image} style={{height: resHeight}} src={src}/>
-    </VisibilitySensor>
       <div className={styleClasses.albumInfo}>
         <span className={styleClasses.albumTitle}>{album.title}</span>
         <span className={styleClasses.commentInfo}>

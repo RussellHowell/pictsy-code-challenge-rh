@@ -40,8 +40,6 @@ updateComment = (event) => this.setState({newCommentText: event.target.value});
 
     //TODO - quick fix for list key error, fix later
     let commentKey=0;
-
-    //TODO - add key to comments
     return(
       <div>
         <Paper  elevation={4}>
