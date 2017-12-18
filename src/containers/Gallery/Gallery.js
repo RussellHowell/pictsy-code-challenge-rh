@@ -54,12 +54,15 @@ getComments(albumId){
 
 //API HANDLER
 apiCallHandler = () => {
-  //Clear album list
-  // this.setState({albums: []});
-  //Display Loading Here
+  //resovle filters
+  let filters = this.state.filter;
+  let filterString = [filters.section, "/", filters.sort, '/',
+    (filters.section === 'top') ? [filters.window, '/'].join('')  : '' ,
+     '1?showViral=', filters.viral, '&mature=', filters.mature].join('');
+  console.log('https://api.imgur.com/3/gallery/' + filterString);
   axios({
     method: 'get',
-    url: 'https://api.imgur.com/3/gallery/user/rising/year/1?&showViral=true&mature=true&album_previews=false',
+    url: 'https://api.imgur.com/3/gallery/' + filterString,
     headers: {'Authorization': keys.imgur_clientId}
   }).then((res) => {
       //TODO - Handle Request Error
@@ -166,6 +169,7 @@ galleryBottomReachedHandler(){
 }
 
 toggleFilterHandler = (open) => () => {
+  console.log('modal toggle');
   this.setState({
     showFilterModal: open
   });
@@ -175,6 +179,11 @@ filterChangeHandler = (field, value) => {
     this.setState({
       filter: {...this.state.filter, [field]: value}
     });
+}
+
+filterRequestHandler = () => {
+  this.setState({showFilterModal: false});
+  this.apiCallHandler();
 }
 
 
@@ -221,7 +230,7 @@ filterChangeHandler = (field, value) => {
           <Button fab onClick={this.toggleFilterHandler(true)} className={styleClasses.fab} color="primary" aria-label="filter">
             <Sort />
           </Button>
-          <FilterModal show={this.state.showFilterModal} modalToggle={this.toggleFilterHandler} filterState={this.state.filter} filterChanged={this.filterChangeHandler}/>
+          <FilterModal show={this.state.showFilterModal} modalToggle={this.toggleFilterHandler} filterState={this.state.filter} filterChanged={this.filterChangeHandler} onFilterRequest={this.filterRequestHandler}/>
           </Auxillary>
         </BottomScrollListener>
         }/>
