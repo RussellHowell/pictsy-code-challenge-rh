@@ -9,7 +9,7 @@ const commentsDrawer = ({drawerToggle, show, comments, onCommentSubmit, stagedCo
   let commentKey=0;
 
   return(
-    <Drawer keepMounted="true" anchor="right" open={show} onRequestClose={drawerToggle(false)}>
+    <Drawer keepMounted={true} anchor="right" open={show} onClose={drawerToggle(false)}>
        <Toolbar className={styleClasses.commentsHeader}>
          <Typography type='subheading' color='inherit'>
            Comments
