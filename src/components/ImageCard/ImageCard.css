@@ -5,6 +5,7 @@
   position: relative;
   display: inline-block;
   margin: 10px;
+  background-color: #FFF;
 }
 
 
@@ -24,6 +25,8 @@
   left: 0px;
   bottom: 2px;
   width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .commentInfo{

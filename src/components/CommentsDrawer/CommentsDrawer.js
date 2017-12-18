@@ -1,22 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styleClasses from './CommentsDrawer.css'
-import { Comment, PermIdentity } from 'material-ui-icons';
-import { Typography, TextField, Button, Drawer, Paper, List, ListItem, ListItemText, Avatar} from 'material-ui';
-
-
+import { PermIdentity } from 'material-ui-icons';
+import { Typography, TextField, Button, Drawer, List, ListItem, ListItemText, Avatar, Toolbar} from 'material-ui';
 
 const commentsDrawer = ({drawerToggle, show, comments, onCommentSubmit, stagedCommentChanged, stagedComment}) => {
 
-  //TODO - quick fix for list key error, fix later
+  //TODO - quick fix for list key error, more robust soln needed
   let commentKey=0;
 
   return(
     <Drawer keepMounted="true" anchor="right" open={show} onRequestClose={drawerToggle(false)}>
-       <div className={styleClasses.commentsHeader}>
-         <h1> Comments</h1>
-        </div>
-         <Paper className={styleClasses.commentsListContainer} elevation={3}>
+       <Toolbar className={styleClasses.commentsHeader}>
+         <Typography type='subheading' color='inherit'>
+           Comments
+         </Typography>
+        </Toolbar>
           <List>
            {
               comments.map((comment) => {
@@ -31,7 +29,6 @@ const commentsDrawer = ({drawerToggle, show, comments, onCommentSubmit, stagedCo
              })
            }
            </List>
-         </Paper>
         <div className={styleClasses.commentsInputContainer}>
          <form className={styleClasses.commentForm} onSubmit={onCommentSubmit}>
          <TextField className={styleClasses.commentInput}

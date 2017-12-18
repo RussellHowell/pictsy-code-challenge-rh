@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styleClasses from './Album.css';
 
-import { Typography, TextField, Button, Drawer, Paper, List, ListItem, ListItemText, Avatar} from 'material-ui';
+import { Typography, Button, Paper} from 'material-ui';
 import CommentsDrawer from '../../../components/CommentsDrawer/CommentsDrawer';
 import { Comment } from 'material-ui-icons';
 import StackGrid, { transitions } from "react-stack-grid";
@@ -47,18 +47,22 @@ stagedCommentChangedHandler = (event) => {
     });
 }
 
-  render( ){
 
-    let imageList = this.props.album.images.map((imageObj)=> { return <img className={styleClasses.image} src={imageObj.src}/>} );
+  render( ){
+    //Quick key fix
+    let imgKey = 0;
+    let imageList = this.props.album.images.map((imageObj)=> { return <img className={styleClasses.image} src={imageObj.src} alt={this.props.album.title} key={["img_", imgKey++].join()}/>} );
 
     return(
       <div>
-        <Paper  elevation={4}>
-          <Typography type="headline" component="h3">
+        <Paper  className={styleClasses.titlePane} levation={4}>
+          <Typography align={'center'} type="headline" component="h3">
             {this.props.album.title}
           </Typography>
           <CommentsDrawer drawerToggle={this.toggleDrawer} show={this.state.showCommentsDrawer} comments={this.state.comments} onCommentSubmit={this.commentSubmittedHandler} stagedCommentChanged={this.stagedCommentChangedHandler} stagedComment={this.state.stagedComment}/>
         </Paper>
+        <div className={styleClasses.titlePaneClear}>
+        </div>
         <StackGrid
          columnWidth={"100%"}
          appear={transitions.appear}

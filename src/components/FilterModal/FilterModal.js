@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, Modal, Typography, Card, CardActions, CardContent, Button, FormGroup,
+import { Modal, Typography, Card, CardActions, CardContent, Button,
   FormControl, RadioGroup, FormControlLabel, FormLabel, Radio, Switch, Grid } from 'material-ui';
 import styleClasses from './FilterModal.css';
 
@@ -8,12 +8,6 @@ const filterModal = ({modalToggle, show, filterState, filterChanged, onFilterReq
 
 const filterChangedHandler = (event, value) => {
   filterChanged(event.target.name, value);
-}
-
-const filterConfirmHandler = () => {
-  console.log("filter confirmed")
-  modalToggle(false);
-  onFilterRequest();
 }
 
   return (

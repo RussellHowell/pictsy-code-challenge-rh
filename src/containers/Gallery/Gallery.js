@@ -6,16 +6,13 @@ import keys from '../../keys/keys';
 
 import ImageCard from '../../components/ImageCard/ImageCard';
 import FilterModal from '../../components/FilterModal/FilterModal';
-import AlbumGallery from 'react-photo-gallery';
 import StackGrid, { transitions } from "react-stack-grid";
 import Album from './Album/Album';
-import Measure from 'react-measure';
 import Auxillary from '../../hoc/Auxillary';
 import BottomScrollListener from 'react-bottom-scroll-listener';
 import { Sort }from 'material-ui-icons';
 import { Button } from 'material-ui';
 import styleClasses from './Gallery.css';
-
 
 
 class Gallery extends Component{
@@ -49,10 +46,6 @@ getAlbum(albumId){
   return this.state.albums[albumId];
 }
 
-getComments(albumId){
-  return this.state.albums[albumId].comments;
-}
-
 //API HANDLER
 apiCallHandler = () => {
   //resovle filters
@@ -70,12 +63,11 @@ apiCallHandler = () => {
       //Parse response - array of imgur 'albums'
       //Some may not be albums, but rather single gifs or videos
       let resAlbums = res.data.data;
-      // console.log(resAlbums[0].images);
       let albums = {}
       resAlbums.forEach((album) => {
 
         //prevent videos from being loaded - maybe support later
-        if(album.type !== 'video/mp4')
+        if((album.type !== undefined && album.type) !== 'video/mp4' || album.is_album === true)
         {
           //extract multiple images from albums
           let albumImages = [];
@@ -111,10 +103,8 @@ apiCallHandler = () => {
         albums: albums,
         showLoading: false,
         showGallery: true
-      }, () => console.log(this.state));
-
+      });
   });
-
 }
 
 updateFilterHandler = (newFilter) => {
@@ -147,7 +137,6 @@ albumClickedHandler = (albumId) => {
                 hash: albumId
               });
             });
-        console.log(this.getAlbum(albumId));
       });
     }else{
       this.setState(tmpState, () => {
@@ -169,7 +158,6 @@ galleryBottomReachedHandler(){
 }
 
 toggleFilterHandler = (open) => () => {
-  console.log('modal toggle');
   this.setState({
     showFilterModal: open
   });
@@ -196,7 +184,6 @@ submitCommentHandler = (albumId, comment) => {
         }
       }
   });
-
 }
 
   render( ) {
@@ -209,11 +196,8 @@ submitCommentHandler = (albumId, comment) => {
       redirect = (
         //TODO - Change this so that the "/album" route is simply passed the entire album
           <Route path="/album" render= {() => <Album album={this.state.albums[this.state.clickedAlbum]} onCommentSubmit={this.submitCommentHandler}/>}/>
-
       )
     }
-
-
         let galleryList = [<div></div>];
         if(this.state.albums !== undefined){
           galleryList =  (Object.keys(this.state.albums).map((albumId) => {
@@ -224,16 +208,15 @@ submitCommentHandler = (albumId, comment) => {
     return(
       <div>
         <Route exact path="/" render={() =>
-          <BottomScrollListener offset={200} onBottom={this.galleryBottomReachedHandler.bind(this)}>
+          <BottomScrollListener offset={400} onBottom={this.galleryBottomReachedHandler.bind(this)}>
           <Auxillary>
             <StackGrid
              columnWidth={500}
              gutterWidth={10}
-             gutterWidth={10}
              appear={transitions.appear}
              appeared={transitions.appeared}
              leaved={transitions.leaved}
-             >
+             monitorImagesLoaded={true}>
               {galleryList.slice(0, this.state.albumsRendered)}
           </StackGrid>
           <Button fab onClick={this.toggleFilterHandler(true)} className={styleClasses.fab} color="primary" aria-label="filter">
@@ -248,7 +231,5 @@ submitCommentHandler = (albumId, comment) => {
     );
   }
 }
-
-
 
 export default withRouter(Gallery);

@@ -1,0 +1,19 @@
+.appBar{
+  background-color: rgb(34, 89, 215);
+  color: #FFF;
+
+}
+
+.root{
+  width: 100%;
+  position:fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+.appTitle{
+  font-family: "roboto";
+  color: #FFF;
+  margin-left: 0
+
+}
