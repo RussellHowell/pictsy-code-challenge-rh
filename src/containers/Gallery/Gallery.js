@@ -27,8 +27,8 @@ state = {
     section: 'hot',
     sort: 'viral',
     window: 'day',
-    viral:'true',
-    mature:'false'
+    viral:true,
+    mature:false
   },
   showLoading: false,
   showFilterModal: false,

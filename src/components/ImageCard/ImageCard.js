@@ -26,7 +26,6 @@ const handleClick = () => {
     onClick(album.id);
 }
 
-// style={{height: resHeight}}
 return (
     <Paper onClick={handleClick} className={styleClasses.container}  elevation={4}>
       <img className={styleClasses.image} style={{height: resHeight}} src={src}/>

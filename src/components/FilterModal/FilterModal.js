@@ -1,16 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, Modal, Typography, Card, CardActions, CardContent, Button, FormGroup, FormControl, RadioGroup, FormControlLabel, FormLabel, Radio } from 'material-ui';
+import { Checkbox, Modal, Typography, Card, CardActions, CardContent, Button, FormGroup, FormControl, RadioGroup, FormControlLabel, FormLabel, Radio, Switch } from 'material-ui';
 import styleClasses from './FilterModal.css';
-
-
 
 const filterModal = ({modalToggle, show, filterState, filterChanged}) => {
 
 const filterChangedHandler = (event, value) => {
   filterChanged(event.target.name, value);
 }
-
 
   return (
     <Modal  show={show} onBackdropClick={modalToggle(false)}>
@@ -52,6 +49,22 @@ const filterChangedHandler = (event, value) => {
               <FormControlLabel value="year" disabled={(filterState.section === "top") ? false : true} control={<Radio />} label="Year" />
               <FormControlLabel value="all" disabled={(filterState.section === "top") ? false : true} control={<Radio />} label="All Time" />
             </RadioGroup>
+            <FormControlLabel name="mature"
+              control={
+                <Switch
+                  checked={filterState.mature}
+                  onChange={filterChangedHandler}
+                  />
+              } label="Allow NSFW Posts"
+             />
+             <FormControlLabel name="viral"
+               control={
+                 <Switch
+                   checked={filterState.viral}
+                   onChange={filterChangedHandler}
+                   />
+               } label="Show Viral Posts"
+              />
             </FormControl>
            </CardContent>
            <CardActions>
